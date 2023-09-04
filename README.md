@@ -4,12 +4,12 @@ C++ test task - Dev 2
 ENG
 Design and implement the ObjectsBus data bus based on the standard C++ library. By data, we mean C++ objects.
 Requirements for the data bus:
--The data bus should be typed and support objects of one type.
--The data bus should be implemented as a circular buffer of finite size.
--The size (number of elements) should be set as an argument.
--The data bus should support multi-threaded writing.
--The data bus should support multi-threaded reading.
--Provide a class or method to write data (object) to the data bus.
+- The data bus should be typed and support objects of one type.
+- The data bus should be implemented as a circular buffer of finite size.
+- The size (number of elements) should be set as an argument.
+- The data bus should support multi-threaded writing.
+- The data bus should support multi-threaded reading.
+- Provide a class or method to write data (object) to the data bus.
 
 Develop an auxiliary class for reading data from the data bus, which should contain the following methods:
 StartReading - performs a search for the last added item in the data bus.
