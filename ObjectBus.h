@@ -10,25 +10,29 @@
 class CObjectBus
 {
 public:
-	std::vector<TData> buffer;
+	std::vector<TData> circleBuffer;
 	std::condition_variable condVariable;
 	std::mutex mutex;
-	size_t writeIndex = 0;
 	std::atomic<size_t> readIndex = 0;
-	
+	std::atomic<size_t> writeIndex = 0;
+
 	//+------------------------------------------------------------------+
 	CObjectBus(size_t size) :
-		buffer(size)
+		circleBuffer(size)
 	{
 
 	}
 
 	//+------------------------------------------------------------------+
-	void Write(TData item)
+	size_t Write(TData item)
 	{
-		std::lock_guard<std::mutex> lock(mutex);
-		buffer[writeIndex] = item;
-		writeIndex = (writeIndex + 1) % buffer.size();
+		LOCK(mutex);
+		//std::unique_lock<std::mutex> lock(mutex);
+		//condVariable.wait(lock, [this] { return (writeIndex + 1) % circleBuffer.size() != readIndex.load(); });
+		circleBuffer[writeIndex] = item;
+		writeIndex = (writeIndex + 1) % circleBuffer.size();
 		condVariable.notify_all();
+		//---
+		return writeIndex;
 	}
 };
