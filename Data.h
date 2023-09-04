@@ -13,7 +13,7 @@ public:
 	TData() = default;
 	TData(const int64_t _value) : value(_value) {}
 	int64_t value;
-	size_t index;
+	//size_t index;
 };
 
 //+------------------------------------------------------------------+

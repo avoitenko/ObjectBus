@@ -17,7 +17,7 @@ inline void busWrite(CObjectBus& bus)
 		//---
 		std::uniform_int_distribution<int> distribution(0, 32767);
 		int value = distribution(generator);
-		
+
 		//---
 		size_t index = bus.Write(TData(value));
 		print("write index: {:<3} value: {}", index, value);
@@ -28,6 +28,8 @@ inline void busWrite(CObjectBus& bus)
 //+------------------------------------------------------------------+
 inline void busRead(CObjectReader& reader)
 {
+	reader.StartReading();
+
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -35,7 +37,8 @@ inline void busRead(CObjectReader& reader)
 		try
 		{
 			TData data = reader.ReadNext();
-			print("read  index: {:<3} value: {}", data.index, data.value);
+
+			print("read  index: {:<3} value: {}", reader.Index(), data.value);
 		}
 		catch (std::runtime_error& e)
 		{
@@ -52,24 +55,21 @@ int main()
 	//---
 	CObjectBus bus(100);
 	CObjectReader reader(bus);
-	
+
 	//---
 	std::thread thWriter1(busWrite, std::ref(bus));
 	std::thread thWriter2(busWrite, std::ref(bus));
-	
-	//---
-	std::thread thReader1(busRead, std::ref(reader));
-	std::thread thReader2(busRead, std::ref(reader));
-	std::thread thReader3(busRead, std::ref(reader));
-
-	//---
 	thWriter1.join();
 	thWriter2.join();
-	
+
 	//---
+	/*
+	std::thread thReader1(busRead, std::ref(reader));
+	std::thread thReader2(busRead, std::ref(reader));
+
 	thReader1.join();
 	thReader2.join();
-	thReader3.join();
+	*/
 
 	//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	//reader.StopReading();
